@@ -1,5 +1,5 @@
 #
-# A Dockerfile to get RUFUS running
+# A Dockerfile to get RUFUS running 
 #
 
 # GCC 4.9 only available up to 16.04
