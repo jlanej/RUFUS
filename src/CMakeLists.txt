@@ -44,7 +44,9 @@ add_library(rufus_core STATIC
 add_executable(PassThroughSamCheck.stranded
 	PassThroughSamCheck.stranded.cpp
 )
-
+add_executable(PassThroughSamCheck.stranded.se
+	PassThroughSamCheck.stranded.se.cpp
+)
 add_executable(PassThroughSamCheck
 	PassThroughSamCheck.cpp
 )
@@ -104,6 +106,12 @@ add_executable(RUFUS.Filter
 target_link_libraries(RUFUS.Filter
 	${RUFUS_UTIL}
 )
+add_executable(RUFUS.Filter.single
+        RUFUS.Filter.ss.cpp
+	)
+target_link_libraries(RUFUS.Filter.single
+        ${RUFUS_UTIL}
+	)
 
 add_executable(RUFUS.interpret
 	RUFUS.interpret.cpp
