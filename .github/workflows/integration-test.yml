@@ -1,0 +1,63 @@
+name: Integration Test
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t rufus:ci .
+
+      - name: Validate test data
+        run: |
+          docker run --rm rufus:ci bash -c "
+            set -e
+            echo '=== Validating committed integration test data ==='
+
+            # Check BAM files exist and are valid
+            for sample in HG002 HG003 HG004; do
+              bam=/RUFUS/integration_test/denovo_data/bams/\${sample}.GRCh38.denovo_regions.bam
+              samtools quickcheck \"\$bam\"
+              count=\$(samtools view -c \"\$bam\")
+              echo \"\${sample}: \${count} reads - OK\"
+              [ \"\$count\" -gt 0 ] || { echo \"ERROR: \${sample} BAM has no reads\"; exit 1; }
+            done
+
+            # Check reference
+            test -f /RUFUS/integration_test/denovo_data/reference/GRCh38_denovo_regions.fa
+            test -f /RUFUS/integration_test/denovo_data/reference/GRCh38_denovo_regions.fa.fai
+            echo 'Reference FASTA: OK'
+
+            # Check BED file
+            regions=\$(wc -l < /RUFUS/integration_test/denovo_data/denovo_regions.bed)
+            echo \"DNM regions: \${regions}\"
+            [ \"\$regions\" -gt 0 ] || { echo 'ERROR: no regions in BED file'; exit 1; }
+
+            # Check RUFUS binaries
+            test -x /RUFUS/bin/RUFUS.Build
+            test -x /RUFUS/bin/RUFUS.Filter
+            test -x /RUFUS/bin/RUFUS.interpret
+            test -x /RUFUS/bin/Overlap
+            test -x /RUFUS/bin/ModelDist
+            echo 'RUFUS binaries: OK'
+
+            echo '=== All validation checks passed ==='
+          "
+
+      - name: Run RUFUS integration test
+        run: |
+          docker run --rm rufus:ci bash -c "
+            set -e
+            cd /RUFUS/integration_test
+            bash run_denovo_integration_test.sh -t 2
+          "
