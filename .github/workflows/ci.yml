@@ -19,7 +19,7 @@ jobs:
         run: docker build -t rufus:ci .
 
       - name: Verify samtools is installed
-        run: docker run --rm rufus:ci command -v samtools
+        run: docker run --rm rufus:ci bash -c "command -v samtools"
 
       - name: Verify samtools version
         run: docker run --rm rufus:ci samtools --version
