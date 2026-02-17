@@ -380,7 +380,7 @@ assign_positional_args ()
 	done
 }
 
-which samtools || die "ERROR, samtools not installed, exiting"
+command -v samtools >/dev/null 2>&1 || die "ERROR, samtools not installed, exiting"
 #which bamtools || die "ERROR, bamtools not installed, exiting"
 
 parse_commandline "$@"
