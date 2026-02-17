@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/download-jellyfish_project.cmake;COMMAND;/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/verify-jellyfish_project.cmake;COMMAND;/usr/local/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/extract-jellyfish_project.cmake
+source_dir=/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project
+work_dir=/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src
+url(s)=https://github.com/gmarcais/Jellyfish/releases/download/v2.2.5/jellyfish-2.2.5.tar.gz
+hash=
+      no_extract=
+

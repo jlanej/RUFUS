@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/rufus_external_project"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/rufus_external_project.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/rufus_external_project-complete.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-build.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-configure.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-download.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-install.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-mkdir.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-patch.rule"
+		},
+		{
+			"file" : "/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"rufus_external_project"
+		],
+		"name" : "rufus_external_project"
+	}
+}

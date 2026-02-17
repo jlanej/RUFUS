@@ -1,0 +1,1 @@
+cmd='/home/runner/work/RUFUS/RUFUS/bin/externals/modified_jellyfish/src/modified_jellyfish_project/configure;--prefix=/home/runner/work/RUFUS/RUFUS/bin/externals/modified_jellyfish/src/modified_jellyfish_project/'

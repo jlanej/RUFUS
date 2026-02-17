@@ -1,0 +1,13 @@
+# Target labels
+ rufus_external_project
+# Source files and their labels
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/rufus_external_project
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/rufus_external_project.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/rufus_external_project-complete.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-build.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-configure.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-download.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-install.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-mkdir.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-patch.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/rufus_external_project-prefix/src/rufus_external_project-stamp/rufus_external_project-update.rule

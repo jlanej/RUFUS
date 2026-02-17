@@ -1,0 +1,13 @@
+# Target labels
+ samblaster_project
+# Source files and their labels
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/samblaster_project
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/samblaster_project.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/samblaster_project-complete.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-build.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-configure.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-download.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-install.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-mkdir.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-patch.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/samblaster/src/samblaster_project-stamp/samblaster_project-update.rule

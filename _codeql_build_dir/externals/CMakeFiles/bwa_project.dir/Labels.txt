@@ -1,0 +1,13 @@
+# Target labels
+ bwa_project
+# Source files and their labels
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/bwa_project
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/bwa_project.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/bwa_project-complete.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-build.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-configure.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-download.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-install.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-mkdir.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-patch.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/bwa/src/bwa_project-stamp/bwa_project-update.rule

@@ -1,0 +1,1 @@
+/home/runner/work/RUFUS/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++  -fopenmp -pthread -fpermissive -fopenmp -std=c++11  -lstdc++ -g -rdynamic -Wl,--dependency-file=CMakeFiles/ConvertFASTqD.to.FASTQ.dir/link.d CMakeFiles/ConvertFASTqD.to.FASTQ.dir/ConvertFASTqD.to.FASTQ.cpp.o -o /home/runner/work/RUFUS/RUFUS/bin/ConvertFASTqD.to.FASTQ  librufus_util.a

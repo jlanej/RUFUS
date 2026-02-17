@@ -1,0 +1,13 @@
+# Target labels
+ jellyfish_project
+# Source files and their labels
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/jellyfish_project
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/jellyfish_project.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/CMakeFiles/jellyfish_project-complete.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-build.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-configure.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-download.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-install.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-mkdir.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-patch.rule
+/home/runner/work/RUFUS/RUFUS/_codeql_build_dir/externals/jellyfish/src/jellyfish_project-stamp/jellyfish_project-update.rule
