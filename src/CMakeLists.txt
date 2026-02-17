@@ -132,3 +132,7 @@ target_link_libraries(ReplaceQwithDinFASTQD
 
 SET(CORE_LIB rufus_core CACH STRING)
 
+add_executable(test_hash_caching
+	test_hash_caching.cpp
+)
+

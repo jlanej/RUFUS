@@ -1,7 +1,9 @@
 bin/
 bin/*
+_codeql_build_dir/
 src/externals/jellyfish-2.2.5/
 src/externals/gkno_launcher/
 cloud/1000G.RUFUSreference.sorted.min45.tab
 *.o
 *test*
+!src/test_hash_caching.cpp

@@ -283,12 +283,17 @@ options:\
   }
 
   cout << "\nDone reading Parent File\n";
+  gettimeofday(&end, NULL);
+  double totalTime = end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec) / 1000000.0;
+  cout << "Processed " << lines << " lines in " << totalTime << "s, found " << HetCount << " mutations" << endl;
   int who = RUSAGE_SELF;
   struct rusage usage;
   int b = getrusage(RUSAGE_SELF, &usage);
-  cout << "I am using " << usage.ru_maxrss << endl;
+  cout << "Peak memory usage: " << usage.ru_maxrss << " KB" << endl;
+  Util::process_mem_usage(vm, rss, MAXvm, MAXrss);
+  cout << "VM: " << vm << "; RSS: " << rss << "; maxVM: " << MAXvm << "; maxRSS: " << MAXrss << endl;
   MutMutHashTable.close();
   Trace.close();
-  cout << "\nreally done\n";
+  cout << "Done\n";
 }
 
