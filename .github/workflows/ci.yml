@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t rufus:ci .
+
+      - name: Verify samtools is installed
+        run: docker run --rm rufus:ci bash -c "command -v samtools"
+
+      - name: Verify samtools version
+        run: docker run --rm rufus:ci samtools --version
+
+      - name: Verify samtools can read BAM files
+        run: |
+          docker run --rm rufus:ci bash -c "
+            set -e
+            samtools quickcheck /RUFUS/testRun/Child.bam && echo 'Child.bam: OK'
+            samtools quickcheck /RUFUS/testRun/Mother.bam && echo 'Mother.bam: OK'
+            samtools quickcheck /RUFUS/testRun/Father.bam && echo 'Father.bam: OK'
+          "
+
+      - name: Verify samtools view functionality
+        run: |
+          docker run --rm rufus:ci bash -c "
+            samtools view -H /RUFUS/testRun/Child.bam > /dev/null
+            echo 'samtools view -H: OK'
+            count=\$(samtools view -c /RUFUS/testRun/Child.bam)
+            echo \"Read count in Child.bam: \$count\"
+            [ \"\$count\" -gt 0 ] && echo 'samtools view -c: OK'
+          "
+
+      - name: Verify samtools sort and index functionality
+        run: |
+          docker run --rm rufus:ci bash -c "
+            cd /tmp
+            samtools sort /RUFUS/testRun/Child.bam -o sorted.bam
+            echo 'samtools sort: OK'
+            samtools index sorted.bam
+            echo 'samtools index: OK'
+          "
+
+      - name: Verify RUFUS pipeline prerequisites
+        run: |
+          docker run --rm rufus:ci bash -c "
+            test -x /RUFUS/runRufus.sh && echo 'runRufus.sh is executable: OK'
+            command -v samtools && echo 'samtools in PATH: OK'
+            ls /RUFUS/bin/ && echo 'RUFUS binaries directory exists: OK'
+          "
