@@ -110,7 +110,7 @@ usage() {
 }
 
 log() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >&2
 }
 
 die() {
@@ -448,6 +448,12 @@ download_reference() {
             log "  WARNING: BWA indexing failed. BWA alignment may not work."
         fi
     fi
+
+    # Clean up large reference files - only keep the region-specific one
+    # This is important for keeping the data directory small enough to commit
+    log "  Cleaning up large reference files..."
+    rm -f "${full_ref}" "${full_ref_gz}" "${full_ref}.fai"
+    log "  Kept only region-specific reference: ${ref_fa} ($(du -h "${ref_fa}" | cut -f1))"
 
     log "  Reference ready: ${ref_fa}"
 }

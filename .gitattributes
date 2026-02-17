@@ -1,0 +1,10 @@
+# Binary files - mark as binary to prevent text conversion
+*.bam binary
+*.bai binary
+*.fa.gz binary
+*.vcf.gz binary
+*.tbi binary
+
+# Handle line endings for shell scripts
+*.sh text eol=lf
+
