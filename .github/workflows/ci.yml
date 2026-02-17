@@ -9,6 +9,8 @@ on:
 jobs:
   integration:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,6 +27,7 @@ jobs:
       - name: Verify samtools can read BAM files
         run: |
           docker run --rm rufus:ci bash -c "
+            set -e
             samtools quickcheck /RUFUS/testRun/Child.bam && echo 'Child.bam: OK'
             samtools quickcheck /RUFUS/testRun/Mother.bam && echo 'Mother.bam: OK'
             samtools quickcheck /RUFUS/testRun/Father.bam && echo 'Father.bam: OK'
