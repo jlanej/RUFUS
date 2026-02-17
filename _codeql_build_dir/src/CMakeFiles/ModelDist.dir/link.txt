@@ -1,1 +1,0 @@
-/home/runner/work/RUFUS/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++  -fopenmp -pthread -fpermissive -fopenmp -std=c++11  -lstdc++ -g -rdynamic -Wl,--dependency-file=CMakeFiles/ModelDist.dir/link.d CMakeFiles/ModelDist.dir/ModelDist.cpp.o -o /home/runner/work/RUFUS/RUFUS/bin/ModelDist  librufus_util.a

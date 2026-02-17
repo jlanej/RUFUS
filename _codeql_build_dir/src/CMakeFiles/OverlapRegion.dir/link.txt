@@ -1,1 +1,0 @@
-/home/runner/work/RUFUS/.codeql-scratch/dbs/cpp/working/autobuild/bin/c++  -fopenmp -pthread -fpermissive -fopenmp -std=c++11  -lstdc++ -g -rdynamic -Wl,--dependency-file=CMakeFiles/OverlapRegion.dir/link.d CMakeFiles/OverlapRegion.dir/OverlapRegion.cpp.o -o /home/runner/work/RUFUS/RUFUS/bin/OverlapRegion  librufus_util.a
