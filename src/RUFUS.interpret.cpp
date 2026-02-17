@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <errno.h>
 
 #define NUMINTS  (1000)
@@ -1456,6 +1457,30 @@ void SamRead::BuildUpHashCountTable()
 	}
 	///////////////////////////////////////////////////
 
+	// Pre-compute long hashes and validity flags to avoid redundant HashToLong calls
+	int numHashes = hashes.size();
+	vector<unsigned long int> longHashes(numHashes);
+	vector<unsigned long int> longHashesRef(numHashes);
+	vector<bool> validHash(numHashes);
+	for(int i = 0; i < numHashes; i++)
+	{
+		const string& hash = hashes[i];
+		bool check = true;
+		for (int j = 0; j < HashSize; j++)
+		{
+			if (!(hash[j] == 'A' or hash[j] == 'C' or hash[j] == 'G' or hash[j] == 'T'))
+			{
+				check = false;
+				break;
+			}
+		}
+		validHash[i] = check;
+		if (check)
+		{
+			longHashes[i] = HashToLong(hash);
+			longHashesRef[i] = HashToLong(hashesRef[i]);
+		}
+	}
 
 	///////////////////building up parent hash counts //////////////////
 	//cout << "Bulding Par hash counts" << endl;
@@ -1464,27 +1489,16 @@ void SamRead::BuildUpHashCountTable()
 	{
 		vector <int> counts;
 		vector <int> countsRef;
-		for(int i = 0; i< hashes.size(); i++)
+		for(int i = 0; i< numHashes; i++)
 		{
-			string hash =  hashes[i];
-			string hashRef = hashesRef[i];
-			bool checkHash = true;
-			for (int j = 0; j < HashSize; j++)
+			if (validHash[i])
 			{
-				if (!(hash[j] == 'A' or hash[j] == 'C' or hash[j] == 'G' or hash[j] == 'T'))
-				{
-					checkHash = false;
-					break;
-				}
-			}
-			if (checkHash)
-			{
-				unsigned long int LongHash = HashToLong(hash);
+				unsigned long int LongHash = longHashes[i];
 				if (ParentHashes[pi].count(LongHash) >0)
 					counts.push_back(ParentHashes[pi][LongHash]);
 				else
 					counts.push_back(0);
-				 unsigned long int LongHashRef = HashToLong(hashRef);
+				unsigned long int LongHashRef = longHashesRef[i];
 				if (ParentHashes[pi].count(LongHashRef) >0)
 					countsRef.push_back(ParentHashes[pi][LongHashRef]);
 				else
@@ -1504,32 +1518,21 @@ void SamRead::BuildUpHashCountTable()
 	//cout << "bulding mut counts" << endl; 
 	//cout << hashes.size() << endl;
 	//cout << hashesRef.size() << endl; 
-	for(int i = 0; i< hashes.size(); i++)
+	for(int i = 0; i< numHashes; i++)
 	{
 	//	cout << i<< endl;
-		string hash =  hashes[i];
-	//	cout << "   hash = " << hash << endl;
-		string hashRef = hashesRef[i];
-	//	cout << "RefHash = " << hashRef << endl;
-		bool checkHash = true;
-		for (int j = 0; j < HashSize; j++)
+	//	cout << "   hash = " << hashes[i] << endl;
+	//	cout << "RefHash = " << hashesRef[i] << endl;
+	//	cout << "check hash = " << validHash[i] << endl;
+		if (validHash[i])
 		{
-			if (!(hash[j] == 'A' or hash[j] == 'C' or hash[j] == 'G' or hash[j] == 'T'))
-			{
-				checkHash = false;
-				break;
-			}
-		}
-	//	cout << "check hash = " << checkHash << endl;
-		if (checkHash)
-		{
-			unsigned long int LongHash = HashToLong(hash);
+			unsigned long int LongHash = longHashes[i];
 			if (MutantHashes.count(LongHash) >0)
 			{       mutCounts.push_back(MutantHashes[LongHash]);}
 			else
 			{       mutCounts.push_back(0);}
 
-			unsigned long int LongHashRef = HashToLong(hashRef);
+			unsigned long int LongHashRef = longHashesRef[i];
 			if (MutantHashes.count(LongHashRef) >0)
 			{       mutCountsRef.push_back(MutantHashes[LongHashRef]);}
 			else
@@ -3189,11 +3192,12 @@ void SamRead::LookUpKmers()
 		RefKmers.push_back(Refhash); 
 		AltKmers.push_back(hash);
 		if (hash != ""){
-			if (MutantHashes.count(HashToLong(hash)) > 0 ){
+			unsigned long int longHash = HashToLong(hash);
+			if (MutantHashes.count(longHash) > 0 ){
 				if (hash == Refhash)
-					MutContigCounts.push_back(MutantHashes[HashToLong(hash)]*-1);
+					MutContigCounts.push_back(MutantHashes[longHash]*-1);
 				else
-					MutContigCounts.push_back(MutantHashes[HashToLong(hash)]);
+					MutContigCounts.push_back(MutantHashes[longHash]);
 			}
 			else
 			{
@@ -3208,15 +3212,15 @@ void SamRead::LookUpKmers()
 				}
 			}
 			else{
-				if (MutantHashes.count(HashToLong(hash)) > 0 ){
-					MutAltCounts.push_back(MutantHashes[HashToLong(hash)]);
+				if (MutantHashes.count(longHash) > 0 ){
+					MutAltCounts.push_back(MutantHashes[longHash]);
 			       	} 
 				else
 					MutAltCounts.push_back(-1);
 				
 				for (int pi = 0; pi < ParentHashes.size(); pi++){
-					if (ParentHashes[pi].count(HashToLong(hash)) > 0){
-						ParAltCounts[pi].push_back(ParentHashes[pi][HashToLong(hash)]);
+					if (ParentHashes[pi].count(longHash) > 0){
+						ParAltCounts[pi].push_back(ParentHashes[pi][longHash]);
 					}
 					else
 						ParAltCounts[pi].push_back(-1);
@@ -3241,16 +3245,17 @@ void SamRead::LookUpKmers()
 		}
 
 		if(Refhash != ""){
-			if (MutantHashes.count(HashToLong(Refhash)) > 0 )
+			unsigned long int longRefhash = HashToLong(Refhash);
+			if (MutantHashes.count(longRefhash) > 0 )
 			{
-				MutRefCounts.push_back(MutantHashes[HashToLong(Refhash)]);
+				MutRefCounts.push_back(MutantHashes[longRefhash]);
 			}
 			else
 				MutRefCounts.push_back(-1);
 
 			for (int pi = 0; pi < ParentHashes.size(); pi++){
-				if (ParentHashes[pi].count(HashToLong(Refhash)) > 0){
-						ParRefCounts[pi].push_back(ParentHashes[pi][HashToLong(Refhash)]);
+				if (ParentHashes[pi].count(longRefhash) > 0){
+						ParRefCounts[pi].push_back(ParentHashes[pi][longRefhash]);
 				}
 				else
 					ParRefCounts[pi].push_back(-1);
@@ -5495,15 +5500,20 @@ options:\
 				ifstream reader; 
 				reader.open (argv[ParentHashFilePaths[i]]); 
 				string line = "";
-				unordered_map <unsigned long int, int> hl;  
+				unordered_map <unsigned long int, int> hl;
+				long parLines = 0;
 				while (getline(reader, line))
 				{
 					vector <string> temp = Split(line, ' '); 
 					unsigned long hash = HashToLong(temp[0]); 
 					hl[hash] = atoi(temp[1].c_str());
 					hash = HashToLong(RevComp(temp[0])); 
-					hl[hash] = atoi(temp[1].c_str()); 
+					hl[hash] = atoi(temp[1].c_str());
+					parLines++;
+					if (parLines % 100000 == 0)
+						cout << "  Parent " << i << ": loaded " << parLines << " alt hashes\r";
 				}
+				cout << "  Parent " << i << ": loaded " << parLines << " alt hashes total" << endl;
 				cout << "pushing back " << i << " size of parent hash is " << ParentHashes.size() << endl; 
 				#pragma omp critical
 				{
@@ -5520,6 +5530,7 @@ options:\
 				ifstream reader;
 				reader.open (argv[ParentHashFilePathsReference[i]]);
 				string line = "";
+				long parRefLines = 0;
 				//unordered_map <unsigned long int, int> hl;
 				while (getline(reader, line))
 				{
@@ -5528,8 +5539,12 @@ options:\
 					ParentHashes[i][hash] = atoi(temp[1].c_str());
 					hash = HashToLong(RevComp(temp[0]));
 					ParentHashes[i][hash] = atoi(temp[1].c_str());
+					parRefLines++;
+					if (parRefLines % 100000 == 0)
+						cout << "  Parent " << i << ": loaded " << parRefLines << " ref hashes\r";
 				}
 				reader.close();
+				cout << "  Parent " << i << ": loaded " << parRefLines << " ref hashes total" << endl;
 			}
 		
 			cout << "check parent thing" << endl; 
@@ -5546,6 +5561,7 @@ options:\
 			ifstream reader;
 			reader.open (MutHashFilePath);
 			string line = "";
+			long mutLines = 0;
 			while (getline(reader, line))
 			{
 		
@@ -5554,12 +5570,17 @@ options:\
 				MutantHashes[hash] = atoi(temp[1].c_str());
 				hash = HashToLong(RevComp(temp[0]));
 				MutantHashes[hash] = atoi(temp[1].c_str());
+				mutLines++;
+				if (mutLines % 100000 == 0)
+					cout << "  Loaded " << mutLines << " mutant alt hashes\r";
 			}
 			reader.close(); 
+			cout << "  Loaded " << mutLines << " mutant alt hashes total" << endl;
 		
 			cout << "reading in mutant ref hashes" << endl; 
 			reader.open (MutHashFilePathReference);
 			line = "";
+			mutLines = 0;
 			while (getline(reader, line))
 			{
 
@@ -5568,13 +5589,19 @@ options:\
 				MutantHashes[hash] = atoi(temp[1].c_str());
 				hash = HashToLong(RevComp(temp[0]));
 				MutantHashes[hash] = atoi(temp[1].c_str());
+				mutLines++;
+				if (mutLines % 100000 == 0)
+					cout << "  Loaded " << mutLines << " mutant ref hashes\r";
 			}
-			reader.close();			
+			reader.close();
+			cout << "  Loaded " << mutLines << " mutant ref hashes total, MutantHashes size = " << MutantHashes.size() << endl;
 		}
 		#pragma omp section
 		{
+			cout << "reading in exclude hashes" << endl;
 			ifstream reader;
 			string line; 
+			long exLines = 0;
 			reader.open(ExcludeFilePath); 
 			while (getline(reader, line))
 			{
@@ -5584,8 +5611,12 @@ options:\
 				ExcludeHashes[hash] =  atoi(temp[1].c_str());
 				//hash = HashToLong(RevComp(temp[0]));
 				//ExcludeHashes[hash] =  atoi(temp[1].c_str());
+				exLines++;
+				if (exLines % 100000 == 0)
+					cout << "  Loaded " << exLines << " exclude hashes\r";
 			}
 			reader.close();
+			cout << "  Loaded " << exLines << " exclude hashes total, ExcludeHashes size = " << ExcludeHashes.size() << endl;
 		}
 	}
 	//***********************************************
@@ -5644,27 +5675,34 @@ options:\
 	{ 
 		HashSize = temp[3].length(); 
 		Hash.insert(pair<string, int>(temp[3], atoi(temp[2].c_str())));
-	
+		long hlLines = 0;
 		while ( getline(HashList, line))
 		{
 			vector<string> temp = Split(line, seperator);
 			Hash.insert(pair<string, int>(temp[3], atoi(temp[2].c_str())));
 			Hash.insert(pair<string, int>(RevComp(temp[3]), atoi(temp[2].c_str()))); 
 			//cout << "added pair " << temp[3] << "\t" << temp[2] << endl;
+			hlLines++;
+			if (hlLines % 100000 == 0)
+				cout << "  Loaded " << hlLines << " hash list entries\r";
 		}
 		HashList.close(); 
-		cout << "done with HashList" << endl;
+		cout << "done with HashList, loaded " << hlLines << " entries, Hash size = " << Hash.size() << endl;
 	}
 	else if (temp.size() ==2)
 	{
 		HashSize = temp[0].length();
 		Hash.insert(pair<string, int>(temp[0], atoi(temp[1].c_str())));
 		Hash.insert(pair<string, int>(RevComp(temp[0]), atoi(temp[1].c_str())));
+		long hlLines = 0;
 		while ( getline(HashList, line))
 		{
 			vector<string> temp = Split(line, seperator);
 			Hash.insert(pair<string, int>(temp[0], atoi(temp[1].c_str())));
 			//cout << "added pair " << temp[3] << "\t" << temp[2] << endl;
+			hlLines++;
+			if (hlLines % 100000 == 0)
+				cout << "  Loaded " << hlLines << " hash list entries\r";
 		}
 		HashList.close();
 		cout << "done with HashList" << endl;
@@ -5788,6 +5826,8 @@ options:\
 	unsigned long LongHash;
 
 	cout << "Reading in Sam File"  << endl;
+	struct timeval readStart, readEnd;
+	gettimeofday(&readStart, NULL);
 	map <string, int> Names; 
 	vector <SamRead> reads; 
 	int counter = 0; 
@@ -5835,13 +5875,19 @@ options:\
 				else 
 				{}//cout << "SKIPPING Alignment" << endl; read.write();}
 				if (counter%100 == 0)
-					cout << "read " << counter << " entries " << char(13); 
+				{
+					gettimeofday(&readEnd, NULL);
+					double elapsed = readEnd.tv_sec - readStart.tv_sec + (readEnd.tv_usec - readStart.tv_usec) / 1000000.0;
+					cout << "Parsed " << counter << " contigs, " << reads.size() << " passed filters, " << elapsed << "s elapsed\r";
+					cout.flush();
+				}
 			}
 			//else do I want to track unaliged alignments? 
 		}
 	}
-	//cout << endl;
-	//cout << "Read in " << reads.size() << " reads " << endl;
+	gettimeofday(&readEnd, NULL);
+	double totalReadTime = readEnd.tv_sec - readStart.tv_sec + (readEnd.tv_usec - readStart.tv_usec) / 1000000.0;
+	cout << "\nDone reading Sam File: " << counter << " contigs parsed, " << reads.size() << " passed filters in " << totalReadTime << "s" << endl;
 	if (reads.size() == 0)
 	{
 		cout << "no reads were passed to RUFUS.interpret exiting" << endl;
@@ -5881,12 +5927,15 @@ options:\
 		//	{reads[reads[i].alignments[j]].alignments = reads[i].alignments;} 
 
 	}
+	cout << "Looking up kmers for " << reads.size() << " reads" << endl;
+	#pragma omp parallel for schedule(dynamic)
 	for (int i = 0; i < reads.size(); i++)
 	{
 		reads[i].LookUpKmers();
 		reads[i].CheckPhase(); 
 		reads[i].clipPattern = reads[i].ClipPattern();
 	}
+	cout << "Done looking up kmers" << endl;
 
 
 
