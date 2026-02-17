@@ -146,7 +146,7 @@ integration_test/
 
 - Zook JM et al. "An open resource for accurately benchmarking small variant
   and reference calls." Nature Biotechnology, 2019.
-- Zook JM et al. "A robust benchmark for detection of germline large deletions
-  and insertions." Nature Biotechnology, 2020.
+- Krusche P et al. "Best practices for benchmarking germline small-variant calls
+  in human genomes." Nature Biotechnology, 2019.
 - NIST Reference Material 8391 — Human DNA for Whole-Genome Variant Assessment
 - Genome in a Bottle: https://www.nist.gov/programs-projects/genome-bottle

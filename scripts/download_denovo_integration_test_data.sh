@@ -426,6 +426,9 @@ download_reference() {
 
         log "  Decompressing reference..."
         gunzip -k "${full_ref_gz}" 2>/dev/null || true
+        if [[ ! -f "${full_ref}" ]] || [[ ! -s "${full_ref}" ]]; then
+            die "Reference decompression failed. Check disk space and file integrity: ${full_ref_gz}"
+        fi
 
         log "  Indexing reference..."
         samtools faidx "${full_ref}"
@@ -441,7 +444,9 @@ download_reference() {
     # Create BWA index for the sub-region reference
     if command -v bwa &>/dev/null; then
         log "  Creating BWA index..."
-        bwa index "${ref_fa}" 2>/dev/null || true
+        if ! bwa index "${ref_fa}" 2>/dev/null; then
+            log "  WARNING: BWA indexing failed. BWA alignment may not work."
+        fi
     fi
 
     log "  Reference ready: ${ref_fa}"
@@ -534,8 +539,8 @@ bash scripts/download_denovo_integration_test_data.sh -q -n 10
 
 ## References
 
-- Zook JM et al. "A robust benchmark for detection of germline large deletions
-  and insertions." Nature Biotechnology, 2020.
+- Zook JM et al. "An open resource for accurately benchmarking small variant
+  and reference calls." Nature Biotechnology, 2019.
 - NIST Reference Material 8391 (HG002)
 - Genome in a Bottle Consortium: https://www.nist.gov/programs-projects/genome-bottle
 FOOTER
