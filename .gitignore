@@ -7,3 +7,9 @@ cloud/1000G.RUFUSreference.sorted.min45.tab
 *.o
 *test*
 !src/test_hash_caching.cpp
+!integration_test/
+!integration_test/README.md
+!integration_test/run_denovo_integration_test.sh
+!scripts/download_denovo_integration_test_data.sh
+!testRun/
+integration_test/denovo_data/
