@@ -118,7 +118,7 @@ s-n>] ...\n' "$0"
 	printf "\t%s\n" "-q1,--fastq1: If starting from fastq files, a list of the mate1 fastq files to improve RUFUS.filter"
 	printf "\t%s\n" "-q2,--fastq2: If starting from fastq files, a list of the mate2 fastq files to improve RUFUS.filter"
 	printf "\t%s\n" "-vs, --Very_Short_Assembly: use very short assembly methods, recomneded when you are expecting over 10,000 variants "
-	printf "\t%s\n" "-pj, --Parallelize_Jelly: parallelize jellyfish step, only use if you have more than 96G of ram"
+	printf "\t%s\n" "-pj, --Parallelize_Jelly: (deprecated, jellyfish steps are now always parallelized)"
 	printf "\t%s\n" "-R, --Region: Run RUFUS only on a samtools style region"
 	printf "\t%s\n" "-fk, --filterK: Kmer threshold for number of kmers required to keep a read during filtering (default = 1)"
 	printf "\t%s\n" "-fq, --filterMinQ: Minimum base quality for fitler step, any kmer with any bases lower than this quality will be ignored (default = 15)"
@@ -302,8 +302,7 @@ parse_commandline ()
 		echo "INFO: Sample Bam file is single end data"
 		;;
 	-pj|--Parallelize_Jelly|--pj)
-		_parallel_jelly="yes"
-		echo "INFO: Paralellizing jellyfish, assuming 3 samples"
+		echo "INFO: -pj flag is deprecated, jellyfish steps are now always parallelized"
 		;; 
 	-ex|--exome)
 		_arg_exome="TRUE"
@@ -763,38 +762,21 @@ samblaster=$RDIR/bin/externals/samblaster/src/samblaster_project/samblaster
 
 
 ####################__GENERATE_JHASH_FILES_FROM_JELLYFISH__#####################
-if [ $_parallel_jelly == "yes" ]
-then 
-	######## TODO insted of assuming 3 samples, 
-	JThreads=$(( Threads / 3 ))
-	if [ "$JThreads" -lt 3 ]
-	then
-	    JThreads=3
-	fi
-	#JThreads=$Threads
-	
-	for parent in "${ParentGenerators[@]}"
-	do
-	      bash $RunJelly $parent $K $(echo $JThreads -2 | bc) $_arg_ParLowK  &
-	done
-	
-	bash $RunJelly $ProbandGenerator $K $(echo $JThreads -2 | bc) 2  & 
-	wait
-else
-        JThreads=$Threads
-	if [ "$JThreads" -lt 3 ]
-        then
-            JThreads=3
-        fi
+NumSamples=$(( ${#ParentGenerators[@]} + 1 ))
+JThreads=$(( Threads / NumSamples ))
+if [ "$JThreads" -lt 3 ]
+then
+    JThreads=3
+fi
+echo "Running jellyfish in parallel for $NumSamples samples with $JThreads threads each"
 
-        for parent in "${ParentGenerators[@]}"
-        do
-              bash $RunJelly $parent $K $(echo $JThreads -2 | bc) $_arg_ParLowK  
-        done
+for parent in "${ParentGenerators[@]}"
+do
+      bash $RunJelly $parent $K $(echo $JThreads -2 | bc) $_arg_ParLowK  &
+done
 
-        # bash $RunJelly $ProbandGenerator $K  $Threads 2
-         bash $RunJelly $ProbandGenerator $K $(echo $JThreads -2 | bc) 2  
-fi 	
+bash $RunJelly $ProbandGenerator $K $(echo $JThreads -2 | bc) 2  &
+wait
 ##############################################################################
 
 
