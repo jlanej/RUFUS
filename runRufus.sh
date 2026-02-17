@@ -768,7 +768,13 @@ if [ "$JThreads" -lt 3 ]
 then
     JThreads=3
 fi
-echo "Running jellyfish in parallel for $NumSamples samples with $JThreads threads each"
+EstRAM=$(( NumSamples * 8 ))
+TotalRAM=$(awk '/MemTotal/ {printf "%d", $2/1024/1024}' /proc/meminfo 2>/dev/null || echo "unknown")
+echo "Running jellyfish in parallel for $NumSamples samples with $JThreads threads each (est. peak RAM: ~${EstRAM}G, available: ${TotalRAM}G)"
+if [ "$TotalRAM" != "unknown" ] && [ "$TotalRAM" -lt "$EstRAM" ]
+then
+    echo "WARNING: Available RAM (${TotalRAM}G) is less than estimated peak (${EstRAM}G). Jellyfish uses --disk mode and will spill to disk if needed, but performance may be reduced."
+fi
 
 for parent in "${ParentGenerators[@]}"
 do
