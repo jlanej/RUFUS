@@ -18,3 +18,4 @@ cloud/1000G.RUFUSreference.sorted.min45.tab
 # but exclude large files that shouldn't be committed
 integration_test/denovo_data/reference/GRCh38_full.fa*
 integration_test/denovo_data/vcfs/
+_codeql_detected_source_root
