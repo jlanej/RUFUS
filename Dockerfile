@@ -33,6 +33,11 @@ RUN set -ex; \
 	rm -rf samtools*; \
 # Verify samtools installation
 	samtools --version; \
+# Install bedtools
+	wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary -O /usr/local/bin/bedtools; \
+	chmod +x /usr/local/bin/bedtools; \
+# Verify bedtools installation
+	bedtools --version; \
 # Cleanup
 	apt-get purge -y --auto-remove $BUILD_DEPS; \
 	apt-get clean; \
