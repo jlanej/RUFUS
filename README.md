@@ -57,20 +57,28 @@ __NOTE:__ Make sure that runTest.sh is called directly from the testRun director
 
 All data for this run is contained in the resources dir, and nothing needs to be provided by the user to test RUFUS.
 
-At the end of a successfull test run, you should see a file named
+At the end of a successful test run, the primary output is a bgzipped VCF:
+
+```
+testRun/Child.bam.generator.V2.overlap.hashcount.fastq.bam.FINAL.vcf.gz
+```
+
+The raw (unfiltered) VCF is also produced:
 
 ```
 testRun/Child.bam.generator.V2.overlap.hashcount.fastq.bam.vcf
 ```
 
-This file should contain a single varient call.  The call should look exactly as follows: 
+Both files should contain a single de novo variant call that looks exactly as follows:
 
 ```
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  ./Child.bam     Mother.bam      Father.bam
 5:177630000     12896   X-DeNovo        T       G       25      PASS    RN=NODE_Child.bam.generator.V2_0_L273_D22:10:12::MH0;MQ=60;cigar=273M;SB=0.454545;CVT=X;HD=-1_-1_-1_-1_-1_19_-1_19_19_-1_-1_-1_-1_-1_20_20_19_-1_-1_18_-1_18_-1_-1_18_-1_-1_;AO=19;VT=X GT:DP:RO:AO     0/1:39:20:19    0/0:23:23:0     0/0:23:23:0
 ```
 
-If you were unable to reproduce this call, something went wront with the RUFUS install, and you should get the test run to work before proceeding further.  If you are unable to reproduce a successfull test run, please contact me at JAndrewRFarrell@gmail.com 
+For a comprehensive description of all expected output files (including intermediate files), see [testRun/EXPECTED_OUTPUT.md](testRun/EXPECTED_OUTPUT.md).
+
+If you were unable to reproduce this call, something went wrong with the RUFUS install, and you should get the test run to work before proceeding further.  If you are unable to reproduce a successful test run, please contact me at JAndrewRFarrell@gmail.com
 
 ## Running 
 
