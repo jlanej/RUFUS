@@ -557,6 +557,7 @@ int NumLowQbases(string qual, int min)
 	return count; 
 }
 int main(int argc, char* argv[]) {
+	std::ios_base::sync_with_stdio(false);
 	float MinPercent;
 	int MinOverlap;
 	int MinCoverage;
