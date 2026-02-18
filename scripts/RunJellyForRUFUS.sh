@@ -26,7 +26,8 @@ else
 	fi
 	mkfifo $GEN.fq
 	bash $GEN | $RDIR/bin/PassThroughSamCheck $GEN.Jelly.chr > $GEN.fq &
-	$JELLYFISH count --disk -m $K -L $L -s 8G -t $T -o $GEN.Jhash -C $GEN.fq
+	JELLY_SIZE=${RUFUS_JELLY_HASH_SIZE:-8G}
+	$JELLYFISH count --disk -m $K -L $L -s $JELLY_SIZE -t $T -o $GEN.Jhash -C $GEN.fq
 	rm $GEN.Jhash.temp
 	rm $GEN.fq
 

@@ -67,7 +67,7 @@ jobs:
 
       - name: Run testRun integration test
         run: |
-          docker run --rm rufus:ci bash -c "
+          docker run --rm -e RUFUS_JELLY_HASH_SIZE=500M rufus:ci bash -c "
             set -e
             cd /RUFUS/testRun
             bash runTest.sh
