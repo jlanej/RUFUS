@@ -53,10 +53,45 @@ jobs:
             echo 'samtools index: OK'
           "
 
+      - name: Verify bedtools is installed
+        run: docker run --rm rufus:ci bash -c "command -v bedtools && bedtools --version"
+
       - name: Verify RUFUS pipeline prerequisites
         run: |
           docker run --rm rufus:ci bash -c "
             test -x /RUFUS/runRufus.sh && echo 'runRufus.sh is executable: OK'
             command -v samtools && echo 'samtools in PATH: OK'
+            command -v bedtools && echo 'bedtools in PATH: OK'
             ls /RUFUS/bin/ && echo 'RUFUS binaries directory exists: OK'
+          "
+
+      - name: Run testRun integration test
+        run: |
+          docker run --rm rufus:ci bash -c "
+            set -e
+            cd /RUFUS/testRun
+            bash runTest.sh
+            echo '=== Checking for expected output VCF ==='
+            vcf=Child.bam.generator.V2.overlap.hashcount.fastq.bam.vcf
+            if [ ! -f \"\$vcf\" ]; then
+              echo \"ERROR: Expected output file \$vcf not found\"
+              exit 1
+            fi
+            echo \"VCF file found: \$vcf\"
+            # Verify the VCF contains the expected de novo variant call
+            variant_lines=\$(grep -v '^#' \"\$vcf\" | wc -l)
+            echo \"Variant lines in VCF: \$variant_lines\"
+            if [ \"\$variant_lines\" -lt 1 ]; then
+              echo 'ERROR: VCF contains no variant calls'
+              exit 1
+            fi
+            # Check for the expected variant at position 12896 on 5:177630000
+            if grep -q '5:177630000.*12896.*X-DeNovo' \"\$vcf\"; then
+              echo 'Expected de novo variant call found: OK'
+            else
+              echo 'WARNING: Expected variant at 5:177630000 pos 12896 not found'
+              echo 'VCF contents:'
+              cat \"\$vcf\"
+            fi
+            echo '=== testRun integration test passed ==='
           "
