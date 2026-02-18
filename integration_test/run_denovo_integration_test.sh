@@ -101,6 +101,22 @@ for bam in "${HG002_BAM}" "${HG003_BAM}" "${HG004_BAM}"; do
     log "  $(basename "${bam}"): ${count} reads - OK"
 done
 
+# Ensure BWA index exists for the reference
+BWA_BIN="${REPO_DIR}/bin/externals/bwa/src/bwa_project/bwa"
+if [[ ! -f "${REF_FA}.sa" ]]; then
+    log ""
+    log "Creating BWA index for reference..."
+    if [[ -x "${BWA_BIN}" ]]; then
+        "${BWA_BIN}" index "${REF_FA}" || die "BWA indexing failed"
+        log "  BWA index created"
+    elif command -v bwa &>/dev/null; then
+        bwa index "${REF_FA}" || die "BWA indexing failed"
+        log "  BWA index created (system bwa)"
+    else
+        die "BWA not found. Build RUFUS first or install bwa."
+    fi
+fi
+
 # Run RUFUS
 log ""
 log "============================================================"
