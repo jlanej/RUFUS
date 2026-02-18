@@ -31,6 +31,7 @@ using namespace std;
 ifstream ParentHash[100];
 
 int main(int argc, char *argv[]) {
+  std::ios_base::sync_with_stdio(false);
   double z = 0;
   double one = 1;
   cout << "0/1 = " << z / 1 << endl;

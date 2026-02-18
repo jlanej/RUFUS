@@ -14,11 +14,11 @@ class Util{
   static bool fncomp(char, char);
   static const std::vector<std::string> Split(const std::string&, const char);
   static std::string trim(std::string);
-  static unsigned long HashToLong(std::string);
-  static unsigned long HashToLongTB(std::string, std::string);
+  static unsigned long HashToLong(const std::string&);
+  static unsigned long HashToLongTB(const std::string&, const std::string&);
   static std::string LongToHash(unsigned long, int);
-  static std::string RevComp(std::string);
-  static std::string RevQual(std::string);
+  static std::string RevComp(const std::string&);
+  static std::string RevQual(const std::string&);
   static void process_mem_usage(double&, double&, double&, double&);
 };
 

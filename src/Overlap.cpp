@@ -39,7 +39,7 @@ int RebuildHashTable(vector<string>& sequenes, int Ai, int SearchHash, unordered
 	cout << "Rebuilding HashTable - starting at " << Ai << endl;
 	int size = sequenes.size();
 
-	#pragma omp parallel for num_threads(12) shared(Hashes)
+	#pragma omp parallel for num_threads(Threads) shared(Hashes)
 	for (int i = Ai; i < size; i++) {
 
 		if (i % 10000 > 1 && i % 10000 < Threads) {
@@ -604,6 +604,7 @@ void compresStrand(string S, int& F, int& R) {
 }
 
 int main(int argc, char* argv[]) {
+	std::ios_base::sync_with_stdio(false);
 	int SearchHash = 30;
 	int ACT = 0;
 	float MinPercent;

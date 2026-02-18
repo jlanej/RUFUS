@@ -25,6 +25,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) 
 {
+	std::ios_base::sync_with_stdio(false);
 	cout << "Call is PreBuiltMutHash Mutant.Mate1.fq Mutant.Mate2.fq firstpassfile hashsize MinQ HashCountThreshold threads " << endl;
 	double vm, rss, MAXvm, MAXrss;
 	MAXvm = 0;

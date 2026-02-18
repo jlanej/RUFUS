@@ -48,114 +48,65 @@ string Util::trim(string s)
   return newS;
 }
 
-unsigned long Util::HashToLong(string hash)
+unsigned long Util::HashToLong(const string& hash)
 {
-  bitset<64> HashBits;
-  //#pragma omp parellel for                                                                                                                                                                    
+  unsigned long result = 0;
   for(int i=0; i<hash.length();i++)
     {
-      if (hash.c_str()[i] == 'A')
-	{
-	  HashBits[i*2] = 0;
-	  HashBits[i*2+1] = 0;
-	}
-      else  if (hash.c_str()[i] == 'C')
-	{
-	  HashBits[i*2] = 0;
-	  HashBits[i*2+1] = 1;
-	}
-      else  if (hash.c_str()[i] == 'G')
-	{
-	  HashBits[i*2] = 1;
-	  HashBits[i*2+1] = 0;
-	}
-      else  if (hash.c_str()[i] == 'T')
-	{
-	  HashBits[i*2] = 1;
-	  HashBits[i*2+1] = 1;
-	}
-      else
-	{
-	  cout << "ERROR, invalid character - " << hash.c_str()[i] << endl;
-	}
+      char c = hash[i];
+      unsigned long bits;
+      switch(c) {
+        case 'A': bits = 0; break;
+        case 'C': bits = 2; break;
+        case 'G': bits = 1; break;
+        case 'T': bits = 3; break;
+        default:
+          cout << "ERROR, invalid character - " << c << endl;
+          bits = 0;
+          break;
+      }
+      result |= (bits << (i * 2));
     }
-  //cout <<  HashBits.to_ulong() << "-" << endl;                                                                                                                                                
-  return HashBits.to_ulong();
+  return result;
 }
 
-unsigned long HashToLongTB(string hash, string calledby)
+unsigned long HashToLongTB(const string& hash, const string& calledby)
 {
-  //cout << "booya" << hash << endl;
-  bitset<64> HashBits;
+  unsigned long result = 0;
   int bitcout = 0;
   for(int i=0; i<hash.size();i++)
     {
-      if (hash.c_str()[i] == 'A')
-	{
-	  HashBits[bitcout] = 0;
-	  bitcout++;
-	  HashBits[bitcout] = 0;
-	  bitcout++;
-	}
-      else  if (hash.c_str()[i] == 'C')
-	{
-	  HashBits[bitcout] = 0;
-	  bitcout++;
-	  HashBits[bitcout] = 1;
-	  bitcout++;
-	}
-      else  if (hash.c_str()[i] == 'G')
-	{
-	  HashBits[bitcout] = 1;
-	  bitcout++;
-	  HashBits[bitcout] = 0;
-	  bitcout++;
-	}
-      else  if (hash.c_str()[i] == 'T')
-	{
-	  HashBits[bitcout] = 1;
-	  bitcout++;
-	  HashBits[bitcout] = 1;
-	  bitcout++;
-	}
-      else
-	{
-	  cout << "ERROR, invalid character - " << hash.c_str()[i] << ", in hash " << hash << ", called by " << calledby <<  endl;
-	}
+      char c = hash[i];
+      unsigned long bits;
+      switch(c) {
+        case 'A': bits = 0; break;
+        case 'C': bits = 2; break;
+        case 'G': bits = 1; break;
+        case 'T': bits = 3; break;
+        default:
+          cout << "ERROR, invalid character - " << c << ", in hash " << hash << ", called by " << calledby <<  endl;
+          bits = 0;
+          break;
+      }
+      result |= (bits << bitcout);
+      bitcout += 2;
     }
-  //cout <<  HashBits.to_ulong() << "-" << endl;
-  return  HashBits.to_ulong();
+  return result;
 }
 
 string Util::LongToHash(unsigned long LongHash, int HashSize)
 {
-  string value = "";
-  //cout << LongHash << endl;                                                                                                                                                                   
-  bitset<64> test (LongHash);
-  for (int i = 1; i < HashSize*2; i+=2)
+  string value;
+  value.reserve(HashSize);
+  for (int i = 0; i < HashSize; i++)
     {
-      if (test[i-1] == 0)
-	{
-	  if (test[i] == 0)
-	    {
-	      value += "A";
-	    }
-	  else
-	    {
-	      value += "C";
-	    }
-	}
-      else
-	{
-	  if (test[i] == 0)
-	    {
-	      value += "G";
-	    }
-	  else
-	    {
-	      value += "T";
-	    }
-	}
+      unsigned long bits = (LongHash >> (i * 2)) & 3;
+      switch(bits) {
+        case 0: value += 'A'; break;
+        case 2: value += 'C'; break;
+        case 1: value += 'G'; break;
+        case 3: value += 'T'; break;
+      }
     }
   return value;
 }
@@ -184,37 +135,34 @@ string Util::LongToHash(unsigned long LongHash, int HashSize)
   return NewString;
   }*/
 
-  string Util::RevComp (string Sequence)
+  string Util::RevComp (const string& Sequence)
 {
-  string NewString = "";
-  //cout << "Start - " << Sequence << "\n";
-  for(int i = Sequence.size()-1; i>=0; i+= -1)
+  int len = Sequence.size();
+  string NewString;
+  NewString.reserve(len);
+  for(int i = len-1; i>=0; i--)
     {
-      char C = Sequence.c_str()[i];
-      //      cout << C << endl;
-      if (C == 'A')
-	{NewString += 'T';}
-      else if (C == 'C')
-	{NewString += 'G';}
-      else if (C == 'G')
-	{NewString += 'C';}
-      else if (C == 'T')
-	{NewString += 'A';}
-      else if (C == 'N')
-	{NewString += 'N';}
-      else
-	{cout << "\nERROR IN RevComp - " << C << "\n";}
+      char C = Sequence[i];
+      switch(C) {
+        case 'A': NewString += 'T'; break;
+        case 'C': NewString += 'G'; break;
+        case 'G': NewString += 'C'; break;
+        case 'T': NewString += 'A'; break;
+        case 'N': NewString += 'N'; break;
+        default: cout << "\nERROR IN RevComp - " << C << "\n"; break;
+      }
     }
-  //cout << "end\n";
   return NewString;
 }
 
-string Util::RevQual(string Sequence)
+string Util::RevQual(const string& Sequence)
 {
-  string NewString = "";
-  for(int i = Sequence.length()-1; i>=0; i+= -1)
+  int len = Sequence.size();
+  string NewString;
+  NewString.reserve(len);
+  for(int i = len-1; i>=0; i--)
     {
-      unsigned char C = Sequence.c_str()[i];
+      unsigned char C = Sequence[i];
       if (C != '\0')
 	{NewString += C;}
     }
